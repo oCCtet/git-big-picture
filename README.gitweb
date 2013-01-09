@@ -1,0 +1,44 @@
+README for gitweb integration
+=============================
+
+-- Valid for Ubuntu 12.04 LTS (Precise Pangolin) --
+
+Assumes git-big-picture is installed system-wide via './setup.py install'.
+
+Obviously also assumes that git, gitweb and web server have been installed
+and configured properly.
+
+Dependencies
+------------
+
+In addition to base Python 2.7, install the python-setuptools so that
+setup.py can work. Install also graphviz so image generation works.
+
+Installing the CGI program
+--------------------------
+
+Create a symlink pointing to the CGI program so the result is:
+
+$ ll /usr/lib/cgi-bin
+lrwxrwxrwx   1 root root    45 Jan  9 18:53 git-big-picture.cgi -> /opt/git-big-picture/graph.cgi*
+lrwxrwxrwx   1 root root    29 Apr 11  2012 gitweb.cgi -> ../../share/gitweb/gitweb.cgi*
+
+Configuring gitweb
+------------------
+
+Add the following to /etc/gitweb.conf:
+
+$feature{'actions'}{'default'} =
+    [('big-picture', '/cgi-bin/git-big-picture.cgi?r=%f', 'summary')];
+
+Configuring git-big-picture
+---------------------------
+
+The CGI program runs git-big-picture with default options. Use git
+config to fine-tune options to your liking; you may want to turn on
+merges and bifurcations ("branch points"):
+
+    git config --system big-picture.merges true
+    git config --system big-picture.bifurcations true
+
+ -- Sami Hartikainen <sami.a.hartikainen@gmail.com>  Wed, 09 Jan 2013 18:32:10 +0200
